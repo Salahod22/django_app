@@ -9,4 +9,5 @@ urlpatterns = [
     path('analyze/<int:entry_id>/', views.analyze_data, name='analyze_data'),
     path('visualize/<int:entry_id>/', views.visualize_data, name='visualize_data'),
     path('data/', views.data_list, name='data_list'),
+    path('delete/<int:entry_id>/', views.delete_csv, name='delete_csv')
 ]

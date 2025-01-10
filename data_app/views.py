@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.storage import default_storage
+from django.conf import settings
 from .models import CSVData
 from .forms import CSVUploadForm
 import pandas as pd
 import json
 import plotly.express as px
+import os
 
 def dashboard(request):
     context = {}
@@ -126,3 +128,16 @@ def visualize_data(request, entry_id):
 def data_list(request):
     data_entries = CSVData.objects.all()
     return render(request, 'dashboard.html', {'data_entries': data_entries})
+
+def delete_csv(request, entry_id):
+    
+    entry = get_object_or_404(CSVData, id=entry_id)
+    
+    # Delete the file from the file system (if it exists)
+    if entry.csv_file:  # Assuming you have a FileField in your model
+        file_path = os.path.join(settings.MEDIA_ROOT, entry.csv_file.name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    
+    entry.delete()  # Delete the entry from the database
+    return redirect('dashboard')  # Redirect to the dashboard

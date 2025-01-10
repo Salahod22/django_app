@@ -5,7 +5,8 @@ import json
 class CSVData(models.Model):
     file_name = models.CharField(max_length=255)
     data = models.TextField()  # Stocker les données sous forme de chaîne JSON
-
+    csv_file = models.FileField(upload_to='uploads/', null=True, blank=True)
+    
     @classmethod
     def create_from_csv(cls, csv_file):
         # Lire le CSV avec Pandas
