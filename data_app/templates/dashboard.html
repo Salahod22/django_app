@@ -102,7 +102,7 @@
         </div>
 
        <!-- Right Section: Data Access and Analysis -->
-    <div class="content">
+    <div class="content"
         {% if entry %}
             <!-- Data Access -->
             <h2>Data Access</h2>
@@ -129,20 +129,61 @@
                 <p class="error">{{ error }}</p>
             {% endif %}
             {% if row_data %}
-                <h3>Row Data:</h3>
-                <pre>{{ row_data }}</pre>
+            {% if row_data %}
+            <h3>Row {{ row_index }} Data:</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        {% for key in row_data.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for value in row_data.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+            
             {% endif %}
             {% if column_data %}
-                <h3>Column Data:</h3>
-                <pre>{{ column_data }}</pre>
+            <h3>Column '{{ column_name }}' Data:</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>{{ column_name }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in column_data %}
+                    <tr>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endif %}
+            <form method="get">
+                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                {% if row_index %}
+                    <button name="row_index" value="{{ row_index|add:'-1' }}" {% if row_index == 0 %}disabled{% endif %}>Previous Row</button>
+                    <button name="row_index" value="{{ row_index|add:'1' }}" {% if row_index >= entry.data|length %}disabled{% endif %}>Next Row</button>
+                {% endif %}
+                {% if column_name %}
+                    <button name="column_name" value="{{ column_name }}">Reload Column</button>
+                {% endif %}
+            </form>
+            
 
             <!-- Statistical Analysis -->
             <h2>Statistical Analysis</h2>
             <a href="{% url 'analyze_data' entry.id %}">Calculate Statistics</a>
 
             {% if stats %}
-                <h3>Statistiques</h3>
                 <table border="1" cellpadding="10" cellspacing="0">
                     <thead>
                         <tr>
