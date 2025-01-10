@@ -9,4 +9,4 @@ Cette application web Django permet aux utilisateurs de télécharger des fichie
 - **Téléchargement de fichiers CSV** : Les utilisateurs peuvent télécharger des fichiers CSV contenant des données.
 - **Accès aux données** : Les utilisateurs peuvent accéder à des lignes ou des colonnes spécifiques par index ou nom.
 - **Analyse statistique** : Effectuez des calculs statistiques de base (moyenne, médiane, écart-type, min, max) sur les colonnes numériques.
-- **Visualisation des données** : Générez des visualisations interactives (histogrammes, diagrammes de dispersion, diagrammes à barres) à l'aide de Plotly.
+- **Visualisation des données** : Générez des visualisations interactives (histogrammes, diagrammes de dispersion, diagrammes à barres)
