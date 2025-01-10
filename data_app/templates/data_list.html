@@ -1,0 +1,22 @@
+<!-- data_app/templates/data_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploaded Data</title>
+</head>
+<body>
+    <h1>Uploaded Data</h1>
+    
+    
+    <!-- List of uploaded files -->
+    <ul>
+        {% for entry in data_entries %}
+            <li>
+                {{ entry.file_name }} - {{ entry.uploaded_at }}
+                <a href="{% url 'analyze_data' entry.id %}">Analyze</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'upload' %}">Upload Another CSV</a>
+</body>
+</html>

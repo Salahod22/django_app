@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargement de Fichier CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Charger un Fichier CSV</h1>
+
+    <!-- Affichage des messages de succès ou d'erreur -->
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <!-- Formulaire pour le téléchargement de fichiers -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="csv_file">Choisir un fichier CSV :</label>
+        <br>
+        <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+        <br><br>
+        <button type="submit">Charger</button>
+    </form>
+</body>
+</html>

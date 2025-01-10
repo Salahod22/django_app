@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .top-section {
+            padding: 1rem;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ccc;
+        }
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            border-right: 1px solid #ccc;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 0.5rem 0;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .sidebar ul li a:hover {
+            color: #007bff;
+        }
+        .content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Section: File Upload -->
+    <div class="top-section">
+        <h1>Data Analysis Dashboard</h1>
+        <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="csv_file">Upload a CSV file:</label>
+                <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+            </div>
+            <button type="submit">Upload</button>
+        </form>
+        {% if message %}
+            <p class="success">{{ message }}</p>
+        {% endif %}
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left Sidebar: List of Uploaded Files -->
+        <div class="sidebar">
+            <h2>Uploaded Files</h2>
+            <ul>
+                {% for entry in data_entries %}
+                    <li>
+                        <a href="{% url 'access_data' entry.id %}">{{ entry.file_name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+       <!-- Right Section: Data Access and Analysis -->
+    <div class="content">
+        {% if entry %}
+            <!-- Data Access -->
+            <h2>Data Access</h2>
+            <form method="get" action="{% url 'access_data' entry.id %}">
+                <div class="form-group">
+                    <label for="row_index">Row Index:</label>
+                    <input type="number" name="row_index" id="row_index" min="0">
+                </div>
+                <div class="columns-section">
+                    <h3>Noms des Colonnes Disponibles</h3>
+                    <ul>
+                        {% for column in columns %}
+                            <li>{{ column }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="column_name">Column Name:</label>
+                    <input type="text" name="column_name" id="column_name">
+                </div>
+                <button type="submit">Fetch Data</button>
+            </form>
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+            {% if row_data %}
+                <h3>Row Data:</h3>
+                <pre>{{ row_data }}</pre>
+            {% endif %}
+            {% if column_data %}
+                <h3>Column Data:</h3>
+                <pre>{{ column_data }}</pre>
+            {% endif %}
+
+            <!-- Statistical Analysis -->
+            <h2>Statistical Analysis</h2>
+            <a href="{% url 'analyze_data' entry.id %}">Calculate Statistics</a>
+
+            {% if stats %}
+                <h3>Statistiques</h3>
+                <table border="1" cellpadding="10" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Colonne</th>
+                            <th>Moyenne</th>
+                            <th>Médiane</th>
+                            <th>Écart-Type</th>
+                            <th>Minimum</th>
+                            <th>Maximum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for column, values in stats.items %}
+                            <tr>
+                                <td>{{ column }}</td>
+                                <td>{{ values.mean }}</td>
+                                <td>{{ values.median }}</td>
+                                <td>{{ values.std }}</td>
+                                <td>{{ values.min }}</td>
+                                <td>{{ values.max }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        
+
+            <!-- Data Visualization -->
+            <h2>Data Visualization</h2>
+            <form method="get" action="{% url 'visualize_data' entry.id %}">
+                <div class="form-group">
+                    <label for="column">Select Column:</label>
+                    <input type="text" name="column" id="column" required>
+                </div>
+                <div class="form-group">
+                    <label for="plot_type">Select Plot Type:</label>
+                    <select name="plot_type" id="plot_type">
+                        <option value="histogram">Histogram</option>
+                        <option value="scatter">Scatter Plot</option>
+                        <option value="bar">Bar Chart</option>
+                    </select>
+                </div>
+                <button type="submit">Generate Plot</button>
+            </form>
+            {% if plot_html %}
+                {{ plot_html|safe }}
+            {% endif %}
+            {% if plot_error %}
+                <p class="error">{{ plot_error }}</p>
+            {% endif %}
+        {% else %}
+                <p>Please select a file from the sidebar to view data and statistics.</p>
+        {% endif %}
+    </div>
+    </div>
+</body>
+</html>
