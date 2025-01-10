@@ -16,7 +16,7 @@
         }
         .top-section {
             padding: 1rem;
-            background: #f4f4f4;
+            background: #8359be;
             border-bottom: 1px solid #ccc;
         }
         .main-content {
@@ -25,7 +25,7 @@
         }
         .sidebar {
             width: 250px;
-            background: #f8f9fa;
+            background: #1b74ce44;
             border-right: 1px solid #ccc;
             padding: 1rem;
             overflow-y: auto;
@@ -50,7 +50,7 @@
             overflow-y: auto;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         .form-group label {
             display: block;
@@ -71,7 +71,7 @@
 <body>
     <!-- Top Section: File Upload -->
     <div class="top-section">
-        <h1>Data Analysis Dashboard</h1>
+        <h2>Data Analysis Dashboard</h2>
         <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -138,7 +138,7 @@
             {% if row_data %}
             {% if row_data %}
             <h3>Row {{ row_index }} Data:</h3>
-            <table border="1">
+            <table border="1", cellspacing="0">
                 <thead>
                     <tr>
                         {% for key in row_data.keys %}
@@ -159,7 +159,7 @@
             {% endif %}
             {% if column_data %}
             <h3>Column '{{ column_name }}' Data:</h3>
-            <table border="1">
+            <table border="1", cellspacing="0">
                 <thead>
                     <tr>
                         <th>{{ column_name }}</th>
@@ -174,6 +174,7 @@
                 </tbody>
             </table>
             {% endif %}
+            <br>
             <form method="get">
                 <input type="hidden" name="entry_id" value="{{ entry.id }}">
                 {% if row_index %}
